@@ -1,29 +1,28 @@
-from flask import Flask, jsonify
+from flask import Flask, app, jsonify
+from sqlalchemy import text
 
 from app.common.errors import register_error_handlers
-from app.db.session import get_db
+from app.db.session import close_db, get_db
 from app.extensions import engine
+from app.modules.movies.routes import movies_bp
 
 
 def create_app():
     app = Flask(__name__)
 
-    
-    #basic rout to verify app is working
+    # basic rout to verify app is working
     @app.get("/health")
     def health():
-        # DB ping (MySQL example)
-        try: 
+        try:
             with engine.connect() as conn:
-                conn.execute("SELECT 1")
-            db_ok = True
-        except:
-            db_ok = False
-
-
-        return jsonify({"status": "ok", "db_ok": db_ok}), 200
-
+                conn.execute(text("SELECT 1"))
+            return jsonify({"status": "ok", "db_ok": True}), 200
+        except Exception as e:
+            # Temporary debug to see the real reason
+            return jsonify({"status": "ok", "db_ok": False, "db_error": str(e)}), 200
 
     register_error_handlers(app)
+    app.register_blueprint(movies_bp)
 
+    app.teardown_appcontext(close_db)
     return app
