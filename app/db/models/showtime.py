@@ -46,3 +46,4 @@ class Showtime(Base):
 
     movie = relationship("Movie", back_populates="showtimes")
     hall = relationship("Hall", back_populates="showtimes")
+    bookings = relationship("Booking", back_populates="showtime")
