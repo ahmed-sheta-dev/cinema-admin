@@ -1,5 +1,5 @@
 from sqlalchemy import TIMESTAMP, Integer, SmallInteger, String, text
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column , relationship
 
 from app.db.base import Base
 
@@ -15,3 +15,5 @@ class Movie(Base):
     created_at = mapped_column(
         TIMESTAMP, nullable=False, server_default=text("CURRENT_TIMESTAMP")
     )
+
+    showtimes = relationship("Showtime", back_populates="movie")
