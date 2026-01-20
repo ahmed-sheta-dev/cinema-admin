@@ -6,6 +6,7 @@ from app.db.session import close_db, get_db
 from app.extensions import engine
 from app.modules.halls.routes import halls_bp
 from app.modules.movies.routes import movies_bp
+from app.modules.showtimes.routes import showtimes_bp
 
 
 def create_app():
@@ -25,6 +26,7 @@ def create_app():
     register_error_handlers(app)
     app.register_blueprint(movies_bp)
     app.register_blueprint(halls_bp)
+    app.register_blueprint(showtimes_bp)
 
     app.teardown_appcontext(close_db)
     return app
