@@ -3,7 +3,7 @@ from pydantic import ValidationError
 from sqlalchemy.exc import IntegrityError
 
 from app.db.session import get_db
-from app.modules.showtimes.schemas import ShowtimeOut
+from app.modules.showtimes.schemas import ShowtimeCreate
 from app.modules.showtimes.service import add_showtime, get_showtimes
 
 showtimes_bp = Blueprint("showtimes", __name__, url_prefix="/showtimes")
@@ -19,7 +19,7 @@ def list_all_showtimes():
 @showtimes_bp.route("/", methods=["POST"])
 def create_new_showtime():
     try:
-        payload = ShowtimeOut.model_validate(request.json)
+        payload = ShowtimeCreate.model_validate(request.json)
     except ValidationError as e:
         return jsonify({"error": "Invalid input", "details": e.errors()}), 400
 
